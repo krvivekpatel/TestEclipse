@@ -1,0 +1,27 @@
+import io.cucumber.java.Before;
+import io.cucumber.java.After;
+import io.cucumber.java.Scenario;
+
+import java.util.Map;
+
+public class Hooks {
+    
+    @Before
+    public void beforeScenario(Scenario scenario) {
+        String featureName = scenario.getUri().toString().split("/")[scenario.getUri().toString().split("/").length - 1].replace(".feature", "");
+        String scenarioName = scenario.getName();
+        String excelPath = "src/test/resources/testdata/" + featureName + ".xlsx";
+        
+        // Read data from the Excel sheet corresponding to scenarioName
+        Map<String, String> scenarioData = ExcelUtils.readScenarioData(excelPath, scenarioName);
+        
+        // Store in TestContext
+        TestContext.setScenarioData(scenarioData);
+        TestContext.setExcelPath(excelPath);
+    }
+
+    @After
+    public void afterScenario() {
+        TestContext.clear();
+    }
+}
