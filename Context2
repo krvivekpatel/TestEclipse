@@ -1,0 +1,52 @@
+package utils;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.Map;
+
+public class TestContext {
+    private static ThreadLocal<Map<String, String>> scenarioData = new ThreadLocal<>();
+    private static ThreadLocal<Integer> stepIndex = ThreadLocal.withInitial(() -> 1);
+    private static ThreadLocal<String> excelPath = new ThreadLocal<>();
+    private static ThreadLocal<Logger> logger = new ThreadLocal<>();
+
+    public static void setScenarioData(Map<String, String> data) {
+        scenarioData.set(data);
+    }
+
+    public static Map<String, String> getScenarioData() {
+        return scenarioData.get();
+    }
+
+    public static int getStepIndex() {
+        return stepIndex.get();
+    }
+
+    public static void incrementStepIndex() {
+        stepIndex.set(stepIndex.get() + 1);
+    }
+
+    public static void setExcelPath(String path) {
+        excelPath.set(path);
+    }
+
+    public static String getExcelPath() {
+        return excelPath.get();
+    }
+
+    public static void setLogger(Logger log) {
+        logger.set(log);
+    }
+
+    public static Logger getLogger() {
+        return logger.get();
+    }
+
+    public static void clear() {
+        scenarioData.remove();
+        stepIndex.remove();
+        excelPath.remove();
+        logger.remove();
+    }
+}
