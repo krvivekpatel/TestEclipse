@@ -1,0 +1,33 @@
+package stepdefinitions;
+
+import base.DriverManager;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.When;
+import io.cucumber.java.en.Then;
+import org.openqa.selenium.WebDriver;
+import utils.TestContext;
+
+public class LoginSteps {
+    WebDriver driver = DriverManager.getDriver();
+
+    @Given("User is on Login Page")
+    public void userOnLoginPage() {
+        TestContext.getLogger().info("Navigating to Login Page");
+        driver.get("https://example.com/login");
+    }
+
+    @When("User enters username and password")
+    public void enterCredentials() {
+        int stepIndex = TestContext.getStepIndex();
+        String username = TestContext.getScenarioData().get("Step" + stepIndex + "Username");
+        String password = TestContext.getScenarioData().get("Step" + stepIndex + "Password");
+
+        TestContext.getLogger().info("Entering credentials: " + username + " / " + password);
+        TestContext.incrementStepIndex();
+    }
+
+    @Then("User should be logged in")
+    public void verifyLogin() {
+        TestContext.getLogger().info("Login successful!");
+    }
+}
