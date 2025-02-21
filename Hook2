@@ -1,0 +1,46 @@
+package hooks;
+
+import base.DriverManager;
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
+import io.cucumber.java.Scenario;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import utils.ExcelUtils;
+import utils.TestContext;
+
+import java.util.Map;
+
+public class Hooks {
+    private static boolean runOnDocker = false; // Change to true for Docker execution
+
+    @Before
+    public void beforeScenario(Scenario scenario) {
+        String featureName = scenario.getUri().toString().split("/")[scenario.getUri().toString().split("/").length - 1].replace(".feature", "");
+        String scenarioName = scenario.getName().replace(" ", "_");
+        String excelPath = "src/test/resources/testdata/" + featureName + ".xlsx";
+        String logFilePath = "logs/" + featureName + "_" + scenarioName + ".log";
+
+        // Set up logging
+        System.setProperty("logFilename", logFilePath);
+        Logger logger = LogManager.getLogger(scenarioName);
+        TestContext.setLogger(logger);
+        logger.info("Starting Scenario: " + scenario.getName());
+
+        // Load Excel Data
+        Map<String, String> scenarioData = ExcelUtils.readScenarioData(excelPath, scenarioName);
+        TestContext.setScenarioData(scenarioData);
+        TestContext.setExcelPath(excelPath);
+
+        // Initialize WebDriver
+        DriverManager.setDriver("chrome", runOnDocker);
+    }
+
+    @After
+    public void afterScenario(Scenario scenario) {
+        Logger logger = TestContext.getLogger();
+        logger.info("Scenario Completed: " + scenario.getName());
+        DriverManager.quitDriver();
+        TestContext.clear();
+    }
+}
