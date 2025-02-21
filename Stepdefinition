@@ -1,0 +1,19 @@
+import io.cucumber.java.en.Given;
+import java.util.Map;
+
+public class StepDefinitions {
+
+    @Given("I perform step {string}")
+    public void performStep(String stepName) {
+        Map<String, String> scenarioData = TestContext.getScenarioData();
+        int stepIndex = TestContext.getStepIndex();
+        
+        // Get data for the current step from Excel
+        String data = scenarioData.getOrDefault("Step" + stepIndex, "DefaultData");
+
+        System.out.println("Executing Step: " + stepName + " with data: " + data);
+        
+        // Increment step index
+        TestContext.incrementStepIndex();
+    }
+}
