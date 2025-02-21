@@ -1,0 +1,54 @@
+package base;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeOptions;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+public class DriverManager {
+    private static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
+
+    public static WebDriver getDriver() {
+        return driver.get();
+    }
+
+    public static void setDriver(String browser, boolean runOnDocker) {
+        try {
+            if (runOnDocker) {
+                // Running on Docker Selenium Grid
+                URL gridUrl = new URL("http://localhost:4444/wd/hub");
+                if (browser.equalsIgnoreCase("chrome")) {
+                    ChromeOptions options = new ChromeOptions();
+                    driver.set(new RemoteWebDriver(gridUrl, options));
+                } else if (browser.equalsIgnoreCase("firefox")) {
+                    FirefoxOptions options = new FirefoxOptions();
+                    driver.set(new RemoteWebDriver(gridUrl, options));
+                } else if (browser.equalsIgnoreCase("edge")) {
+                    EdgeOptions options = new EdgeOptions();
+                    driver.set(new RemoteWebDriver(gridUrl, options));
+                }
+            } else {
+                // Local Execution
+                if (browser.equalsIgnoreCase("chrome")) {
+                    driver.set(new org.openqa.selenium.chrome.ChromeDriver());
+                } else if (browser.equalsIgnoreCase("firefox")) {
+                    driver.set(new org.openqa.selenium.firefox.FirefoxDriver());
+                } else if (browser.equalsIgnoreCase("edge")) {
+                    driver.set(new org.openqa.selenium.edge.EdgeDriver());
+                }
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void quitDriver() {
+        if (driver.get() != null) {
+            driver.get().quit();
+            driver.remove();
+        }
+    }
+}
