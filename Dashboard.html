@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Environment Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .dashboard-container {
+            max-width: 800px;
+            width: 100%;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+        }
+        td {
+            background-color: #f9f9f9;
+        }
+        tr:nth-child(even) td {
+            background-color: #f2f2f2;
+        }
+        tr:hover td {
+            background-color: #e0e0e0;
+        }
+        .merged-cell {
+            vertical-align: middle;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+        .status-passed {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        .status-failed {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        .comment {
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Test Environment Dashboard</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Environment</th>
+                    <th>Status</th>
+                    <th>Comment</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td rowspan="6" class="merged-cell">Production</td>
+                    <td class="status-passed">Passed</td>
+                    <td class="comment">All tests executed successfully.</td>
+                </tr>
+                <tr>
+                    <td class="status-failed">Failed</td>
+                    <td class="comment">Issue with login module.</td>
+                </tr>
+                <tr>
+                    <td class="status-passed">Passed</td>
+                    <td class="comment">Performance tests completed.</td>
+                </tr>
+                <tr>
+                    <td class="status-failed">Failed</td>
+                    <td class="comment">Database connection timeout.</td>
+                </tr>
+                <tr>
+                    <td class="status-passed">Passed</td>
+                    <td class="comment">Security tests passed.</td>
+                </tr>
+                <tr>
+                    <td class="status-passed">Passed</td>
+                    <td class="comment">Final validation completed.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
