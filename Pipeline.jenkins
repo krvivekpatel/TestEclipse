@@ -1,0 +1,86 @@
+pipeline {
+    agent any
+    stages {
+        stage('Generate Dashboard') {
+            steps {
+                script {
+                    // Define your data (e.g., from test results)
+                    def environment = "Production"
+                    def testResults = [
+                        [status: "Passed", comment: "All tests executed successfully."],
+                        [status: "Failed", comment: "Issue with login module."],
+                        [status: "Passed", comment: "Performance tests completed."],
+                        [status: "Failed", comment: "Database connection timeout."],
+                        [status: "Passed", comment: "Security tests passed."],
+                        [status: "Passed", comment: "Final validation completed."]
+                    ]
+
+                    // Generate HTML content
+                    def htmlContent = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Environment Dashboard</title>
+    <style>
+        /* Same CSS as above */
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .dashboard-container { max-width: 800px; width: 100%; background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+        h1 { text-align: center; color: #333; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { padding: 12px; text-align: left; border: 1px solid #ddd; }
+        th { background-color: #4CAF50; color: white; font-weight: bold; }
+        td { background-color: #f9f9f9; }
+        tr:nth-child(even) td { background-color: #f2f2f2; }
+        tr:hover td { background-color: #e0e0e0; }
+        .merged-cell { vertical-align: middle; text-align: center; font-size: 16px; font-weight: bold; color: #333; }
+        .status-passed { color: #2e7d32; font-weight: bold; }
+        .status-failed { color: #d32f2f; font-weight: bold; }
+        .comment { font-style: italic; }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Test Environment Dashboard</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Environment</th>
+                    <th>Status</th>
+                    <th>Comment</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${testResults.collect { result, index ->
+                    "<tr>" +
+                    (index == 0 ? "<td rowspan=\"6\" class=\"merged-cell\">${environment}</td>" : "") +
+                    "<td class=\"status-${result.status.toLowerCase()}\">${result.status}</td>" +
+                    "<td class=\"comment\">${result.comment}</td>" +
+                    "</tr>"
+                }.join('\n                ')}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+                    """
+
+                    // Write HTML to a file
+                    writeFile file: 'dashboard.html', text: htmlContent
+                }
+            }
+        }
+        stage('Publish Dashboard') {
+            steps {
+                publishHTML(target: [
+                    reportDir: '.',
+                    reportFiles: 'dashboard.html',
+                    reportName: 'Test Environment Dashboard',
+                    keepAll: true,
+                    alwaysLinkToLastBuild: true
+                ])
+            }
+        }
+    }
+}
