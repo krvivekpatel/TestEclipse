@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Environment Dashboard</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f9;">
+    <!-- Wrapper table to control width and centering -->
+    <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; margin: 0 auto; background-color: #fff; padding: 20px; border-radius: 8px;">
+        <tr>
+            <td align="center" style="padding: 20px;">
+                <h1 style="text-align: center; color: #333; margin: 0 0 20px 0; font-size: 24px;">Test Environment Dashboard</h1>
+                <!-- Main content table -->
+                <table border="1" cellpadding="12" cellspacing="0" style="width: 100%; max-width: 600px; border-collapse: collapse; border: 1px solid #ddd;">
+                    <thead>
+                        <tr style="background-color: #4CAF50; color: white;">
+                            <th style="padding: 12px; text-align: left; border: 1px solid #ddd; font-weight: bold;">Environment</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #ddd; font-weight: bold;">Status</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #ddd; font-weight: bold;">Comment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <#list environments as env>
+                            <#list env.tests as test>
+                                <tr style="background-color: ${(test_index % 2 == 0)?string('#f9f9f9', '#f2f2f2')};">
+                                    <#if test_index == 0>
+                                        <td rowspan="${env.tests?size}" style="vertical-align: middle; text-align: center; font-size: 16px; font-weight: bold; color: #333; padding: 12px; border: 1px solid #ddd;">${env.name?html}</td>
+                                    </#if>
+                                    <td style="padding: 12px; text-align: left; border: 1px solid #ddd; color: ${test.status == 'Passed'?string('#2e7d32', '#d32f2f')}; font-weight: bold;">${test.status?html}</td>
+                                    <td style="padding: 12px; text-align: left; border: 1px solid #ddd; font-style: italic;">${test.comment?html}</td>
+                                </tr>
+                            </#list>
+                        </#list>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
